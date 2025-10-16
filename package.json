@@ -1,0 +1,31 @@
+{
+  "name": "task-manager-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Task Manager - Monorepo with NestJS backend and Nuxt frontend",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:front\"",
+    "dev:backend": "cd backend && npm run start:dev",
+    "dev:front": "cd front && npm run dev",
+    "build": "npm run build:backend && npm run build:front",
+    "build:backend": "cd backend && npm run build",
+    "build:front": "cd front && npm run build",
+    "install:all": "npm install && cd backend && npm install && cd ../front && npm install",
+    "lint": "npm run lint:backend && npm run lint:front",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:front": "cd front && npm run lint",
+    "test:backend": "cd backend && npm run test",
+    "test:e2e:backend": "cd backend && npm run test:e2e"
+  },
+  "workspaces": [
+    "backend",
+    "front"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
