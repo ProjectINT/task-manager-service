@@ -30,8 +30,8 @@ npm run dev
 
 Or run them separately:
 ```bash
-npm run dev:backend  # Backend only (NestJS)
-npm run dev:front    # Frontend only (Nuxt)
+npm run dev:backend  # Backend only (NestJS on port 3001)
+npm run dev:front    # Frontend only (Nuxt on port 3000)
 ```
 
 ### Build
