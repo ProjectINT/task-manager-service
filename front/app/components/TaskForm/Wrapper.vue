@@ -89,5 +89,26 @@ async function handleSubmit(values: TaskFormValues) {
         @cancel="close"
       />
     </template>
+
+    <template #footer>
+      <div class="flex gap-3 justify-end">
+        <UButton
+          type="button"
+          color="neutral"
+          variant="ghost"
+          :disabled="isMutating"
+          @click="close"
+        >
+          Cancel
+        </UButton>
+        <UButton
+          type="submit"
+          form="task-form"
+          :loading="isMutating"
+        >
+          {{ mode === 'edit' ? 'Save changes' : 'Create task' }}
+        </UButton>
+      </div>
+    </template>
   </UModal>
 </template>
