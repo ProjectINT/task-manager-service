@@ -19,14 +19,16 @@ export interface TaskFilter {
 }
 
 /**
- * Task interface
+ * Task interface (matches backend response)
  */
 export interface Task {
-  id: string | number
+  id: string
   title: string
-  description?: string
+  description: string | null
   status: TaskStatus
-  dueDate?: string | Date
+  dueDate: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 /**
@@ -36,7 +38,7 @@ export interface CreateTaskInput {
   title: string
   description?: string
   status?: TaskStatus
-  dueDate?: string | Date
+  dueDate?: string
 }
 
 /**
@@ -46,7 +48,31 @@ export interface UpdateTaskInput {
   title?: string
   description?: string
   status?: TaskStatus
-  dueDate?: string | Date
+  dueDate?: string
+}
+
+/**
+ * Paginated response interface
+ */
+export interface PaginatedResponse<T> {
+  data: T[]
+  meta: {
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+  }
+}
+
+/**
+ * Task counters interface
+ */
+export interface TaskCounters {
+  pending: number
+  in_progress: number
+  completed: number
+  cancelled: number
+  total: number
 }
 
 /**
@@ -64,8 +90,8 @@ export interface UseTasksReturn {
   state: TasksState
   filteredTasks: ComputedRef<Task[]>
   addTask: (task: Task) => void
-  updateTask: (id: string | number, updated: UpdateTaskInput) => void
-  removeTask: (id: string | number) => void
+  updateTask: (id: string, updated: UpdateTaskInput) => void
+  removeTask: (id: string) => void
 }
 
 /**
@@ -81,3 +107,4 @@ export interface TaskSortOptions {
   sortBy: TaskSortBy
   order: SortOrder
 }
+
