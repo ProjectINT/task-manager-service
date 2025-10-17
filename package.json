@@ -16,7 +16,8 @@
     "lint:front": "cd front && npm run lint",
     "test:backend": "cd backend && npm run test",
     "test:e2e:backend": "cd backend && npm run test:e2e",
-    "generate:tasks": "ts-node scripts/generate-tasks.ts"
+    "generate:tasks": "ts-node scripts/generate-tasks.ts",
+    "update:db": "ts-node scripts/update-db.ts"
   },
   "workspaces": [
     "backend",
