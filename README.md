@@ -34,6 +34,16 @@ npm run dev:backend  # Backend only (NestJS on port 3001)
 npm run dev:front    # Frontend only (Nuxt on port 3000)
 ```
 
+### Docker Compose (Backend + PostgreSQL + Redis)
+
+For local development without external cloud services, use Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+The `backend/.env.docker` file already contains default values. Edit them if needed before running. This command will start `postgres`, `redis`, and `backend` containers. The backend will automatically wait for the database, run Prisma migrations, and start on port `3001`. To stop the services, run `docker compose down`, and to completely reset the database, add the `-v` flag.
+
 ### Build
 
 Build both projects:

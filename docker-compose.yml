@@ -1,0 +1,58 @@
+services:
+  postgres:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-taskmgr}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-taskmgrpass}
+      POSTGRES_DB: ${POSTGRES_DB:-taskmgr}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-taskmgr} -d ${POSTGRES_DB:-taskmgr}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    env_file:
+      - backend/.env.docker
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-taskmgr}:${POSTGRES_PASSWORD:-taskmgrpass}@postgres:5432/${POSTGRES_DB:-taskmgr}?schema=public
+      DIRECT_URL: postgresql://${POSTGRES_USER:-taskmgr}:${POSTGRES_PASSWORD:-taskmgrpass}@postgres:5432/${POSTGRES_DB:-taskmgr}
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      REDIS_USERNAME: ""
+      REDIS_PASSWORD: ""
+      REDIS_TLS: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "${APP_PORT:-3001}:3001"
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    command: ["npm", "run", "start:docker"]
+
+volumes:
+  pgdata:
