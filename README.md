@@ -109,6 +109,13 @@ docker compose up --build
 
 Configuration in `backend/.env.docker`. Stop with `docker compose down` (add `-v` to reset database).
 
+## Populate database
+ - scripts/update-db.ts
+
+```bash
+npm run update:db
+```
+
 ## 🛠 Tech Stack
 
 **Backend:** NestJS, Prisma, PostgreSQL, Redis, TypeScript, Jest
