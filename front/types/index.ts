@@ -3,11 +3,12 @@
  */
 
 import type { ComputedRef } from 'vue'
+import type { $Enums } from '@prisma/client'
 
 /**
  * Task status
  */
-export type TaskStatus = 'pending' | 'in-progress' | 'completed'
+export type TaskStatus = $Enums.TaskStatus
 
 /**
  * Task filter interface

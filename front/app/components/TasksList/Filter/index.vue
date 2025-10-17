@@ -23,7 +23,7 @@ function handleDueDateChange(value: Date | null) {
         <TasksListFilterStatusFilterButtons
           :model-value="tasksStore.filter.type"
           :disabled="loading"
-          :counts="{ all: tasksCountByStatus?.all, pending: tasksCountByStatus?.pending, 'in-progress': tasksCountByStatus?.['in-progress'], completed: tasksCountByStatus?.completed }"
+          :counts="{ all: tasksCountByStatus?.all, pending: tasksCountByStatus?.pending, in_progress: tasksCountByStatus?.in_progress, completed: tasksCountByStatus?.completed, cancelled: tasksCountByStatus?.cancelled }"
           :include-all="true"
           @update:model-value="handleStatusChange"
         />

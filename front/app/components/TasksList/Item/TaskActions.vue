@@ -50,7 +50,7 @@ async function handleDelete() {
 			color="primary"
 			size="sm"
 			:disabled="loading"
-			@click="handleStatusChange('in-progress')"
+			@click="handleStatusChange('in_progress')"
 		>
 			Start
 		</UButton>

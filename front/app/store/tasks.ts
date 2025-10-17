@@ -71,8 +71,9 @@ export const useTasksStore = defineStore('tasks', {
       return {
         all: state.tasks.length,
         pending: state.tasks.filter((t: Task) => t.status === 'pending').length,
-        'in-progress': state.tasks.filter((t: Task) => t.status === 'in-progress').length,
-        completed: state.tasks.filter((t: Task) => t.status === 'completed').length
+        in_progress: state.tasks.filter((t: Task) => t.status === 'in_progress').length,
+        completed: state.tasks.filter((t: Task) => t.status === 'completed').length,
+        cancelled: state.tasks.filter((t: Task) => t.status === 'cancelled').length
       }
     },
 

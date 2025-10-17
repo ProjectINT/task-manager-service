@@ -19,10 +19,15 @@ const statusMeta = computed(() => {
 				label: 'Completed',
 				color: 'success' as const
 			}
-		case 'in-progress':
+		case 'in_progress':
 			return {
 				label: 'In Progress',
 				color: 'secondary' as const
+			}
+		case 'cancelled':
+			return {
+				label: 'Cancelled',
+				color: 'neutral' as const
 			}
 		case 'pending':
 			return {

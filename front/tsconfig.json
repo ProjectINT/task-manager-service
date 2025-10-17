@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
+    "verbatimModuleSyntax": true,
     "paths": {
       "~/*": ["./*"],
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@prisma/client": ["../backend/node_modules/@prisma/client"]
     }
   },
   // https://nuxt.com/docs/guide/concepts/typescript

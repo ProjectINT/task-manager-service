@@ -8,7 +8,7 @@ export const mockTasks: Task[] = [
     id: 1,
     title: 'Implement user authentication',
     description: 'Add JWT-based authentication system with login and registration',
-    status: 'in-progress',
+    status: 'in_progress',
     dueDate: new Date('2025-10-20')
   },
   {
@@ -36,7 +36,7 @@ export const mockTasks: Task[] = [
     id: 5,
     title: 'Fix responsive layout issues',
     description: 'Resolve mobile and tablet view problems in the task list',
-    status: 'in-progress',
+    status: 'in_progress',
     dueDate: new Date('2025-10-18')
   },
   {
@@ -57,7 +57,7 @@ export const mockTasks: Task[] = [
     id: 8,
     title: 'Implement dark mode',
     description: 'Add theme switcher and dark mode styles',
-    status: 'in-progress',
+    status: 'in_progress',
     dueDate: new Date('2025-10-19')
   },
   {
@@ -73,5 +73,12 @@ export const mockTasks: Task[] = [
     description: 'Integrate Sentry for error tracking and monitoring',
     status: 'completed',
     dueDate: new Date('2025-10-16')
+  },
+  {
+    id: 11,
+    title: 'Decommission legacy endpoint',
+    description: 'Remove deprecated v1 endpoint and update docs',
+    status: 'cancelled',
+    dueDate: new Date('2025-10-21')
   }
 ]

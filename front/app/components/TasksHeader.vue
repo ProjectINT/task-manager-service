@@ -48,7 +48,7 @@ function handleCreateTask() {
         <div>
           <p>In progress</p>
           <p>
-            {{ tasksCountByStatus['in-progress'] ?? 0 }}
+            {{ tasksCountByStatus.in_progress ?? 0 }}
           </p>
         </div>
       </UCard>

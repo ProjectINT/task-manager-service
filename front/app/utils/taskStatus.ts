@@ -4,8 +4,9 @@ export type Option<T> = { label: string; value: T }
 
 export const statusOptionsBase: Option<TaskStatus>[] = [
   { label: 'Pending', value: 'pending' },
-  { label: 'In progress', value: 'in-progress' },
-  { label: 'Completed', value: 'completed' }
+  { label: 'In progress', value: 'in_progress' },
+  { label: 'Completed', value: 'completed' },
+  { label: 'Cancelled', value: 'cancelled' }
 ]
 
 export const statusOptionsWithAll: Option<TaskStatus | null>[] = [
