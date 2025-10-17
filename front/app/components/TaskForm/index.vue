@@ -34,11 +34,7 @@ const errors = reactive({
 	title: ''
 })
 
-const statusOptions = computed(() => ([
-	{ label: 'Pending', value: 'pending' satisfies TaskStatus },
-	{ label: 'In progress', value: 'in-progress' satisfies TaskStatus },
-	{ label: 'Completed', value: 'completed' satisfies TaskStatus }
-]))
+// Status options moved to reusable <StatusSelect /> component
 
 const isEditing = computed(() => props.mode === 'edit')
 
@@ -111,14 +107,12 @@ function handleSubmit() {
 			/>
 		</UFormGroup>
 
-		<UFormGroup label="Status">
-			<USelect
-				v-model="form.status"
-				:options="statusOptions"
-				:disabled="loading"
-				class="w-full"
-			/>
-		</UFormGroup>
+			<UFormGroup label="Status">
+				<StatusSelect
+					v-model="form.status"
+					:disabled="loading"
+				/>
+			</UFormGroup>
 
 		<DateSelect
 			v-model="formDueDate"
