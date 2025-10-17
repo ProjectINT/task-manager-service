@@ -3,18 +3,12 @@ import { computed, onMounted } from 'vue'
 
 import { useTasksStore } from './store/tasks'
 
-import type { Task } from '../types'
-
 const tasksStore = useTasksStore()
 
 const loading = computed(() => tasksStore.loading)
 
 function openCreateForm() {
   tasksStore.openTaskCreateForm()
-}
-
-function openEditForm(taskId: Task['id']) {
-  tasksStore.openTaskEditForm(taskId)
 }
 
 function closeForm() {
@@ -38,10 +32,7 @@ useHead({
       <TasksHeader @create-task="openCreateForm" />
       <ErrorAlert />
 
-      <TasksList
-        :loading="loading"
-        @edit-task="openEditForm"
-      />
+      <TasksList :loading="loading" />
 
       <ClientOnly>
         <TaskFormWrapper

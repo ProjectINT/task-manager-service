@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useToast } from '#imports'
 import { useTasksStore } from '../../../store/tasks'
-import type { Task, TaskStatus } from '../../../../types'
+import type { Task } from '../../../../types'
 import StatusBadge from './StatusBadge.vue'
 import TaskActions from './TaskActions.vue'
 
@@ -13,12 +12,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const emit = defineEmits<{
-	(e: 'edit', taskId: Task['id']): void
-}>()
-
 const tasksStore = useTasksStore()
-const toast = useToast()
 
 const task = computed(() => tasksStore.getTaskById(props.taskId))
 
@@ -33,27 +27,6 @@ const dueDateLabel = computed(() => {
 	}
 	return date.toLocaleDateString()
 })
-
-function handleStatusChange(status: TaskStatus) {
-	if (!task.value) return
-	tasksStore.updateTask(task.value.id, { status })
-	toast.add({ title: 'Status updated', color: 'info' })
-}
-
-function handleEdit() {
-	emit('edit', props.taskId)
-}
-
-async function handleDelete() {
-	if (!task.value) return
-	try {
-		await tasksStore.deleteTask(task.value.id)
-		toast.add({ title: 'Task deleted', color: 'success' })
-	} catch (err) {
-		const message = err instanceof Error ? err.message : 'Failed to delete task'
-		toast.add({ title: 'Error', description: message, color: 'error' })
-	}
-}
 </script>
 
 <template>
@@ -79,12 +52,8 @@ async function handleDelete() {
 
     <template #footer>
       <TaskActions
-        v-if="task"
-        :task="task"
+        :task-id="taskId"
         :disabled="disabled"
-        @status-change="handleStatusChange"
-        @edit="handleEdit"
-        @delete="handleDelete"
       />
     </template>
 	</UCard>

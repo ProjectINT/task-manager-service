@@ -1,32 +1,44 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useToast } from '#imports'
+import { useTasksStore } from '../../../store/tasks'
 import type { Task, TaskStatus } from '../../../../types'
 
 interface Props {
-	task: Task
+	taskId: Task['id']
 	disabled?: boolean
 }
 
 const props = defineProps<Props>()
 
-const emit = defineEmits<{
-	(e: 'statusChange', status: TaskStatus): void
-	(e: 'edit'): void
-	(e: 'delete'): void
-}>()
+const tasksStore = useTasksStore()
+const toast = useToast()
 
-const canComplete = computed(() => props.task.status !== 'completed')
-const canStart = computed(() => props.task.status === 'pending')
+const task = computed(() => tasksStore.getTaskById(props.taskId))
+
+const canComplete = computed(() => task.value?.status !== 'completed')
+const canStart = computed(() => task.value?.status === 'pending')
 
 function handleStatusChange(status: TaskStatus) {
-	emit('statusChange', status)
+	if (!task.value) return
+	tasksStore.updateTask(task.value.id, { status })
+	toast.add({ title: 'Status updated', color: 'info' })
 }
 
 function handleEdit() {
-	emit('edit')
+	if (!task.value) return
+	tasksStore.openTaskEditForm(task.value.id)
 }
 
-function handleDelete() {
-	emit('delete')
+async function handleDelete() {
+	if (!task.value) return
+	try {
+		await tasksStore.deleteTask(task.value.id)
+		toast.add({ title: 'Task deleted', color: 'success' })
+	} catch (err) {
+		const message = err instanceof Error ? err.message : 'Failed to delete task'
+		toast.add({ title: 'Error', description: message, color: 'error' })
+	}
 }
 </script>
 

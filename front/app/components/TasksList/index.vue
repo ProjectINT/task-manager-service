@@ -2,17 +2,13 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTasksStore } from '../../store/tasks'
-import type { Task, TaskStatus } from '../../../types'
+import type { TaskStatus } from '../../../types'
 
 interface Props {
 	loading?: boolean
 }
 
 defineProps<Props>()
-
-const emit = defineEmits<{
-	(e: 'edit-task', taskId: Task['id']): void
-}>()
 
 const tasksStore = useTasksStore()
 const { filteredTasks, tasksCountByStatus } = storeToRefs(tasksStore)
@@ -25,10 +21,6 @@ function handleFilterChange(filterType: TaskStatus | null) {
 
 function handleDueDateChange(date: Date | null) {
 	tasksStore.setFilter({ dueDate: date })
-}
-
-function handleEdit(taskId: Task['id']) {
-	emit('edit-task', taskId)
 }
 </script>
 
@@ -57,7 +49,6 @@ function handleEdit(taskId: Task['id']) {
 					:key="task.id"
 					:task-id="task.id"
 					:disabled="loading"
-					@edit="handleEdit"
 				/>
 			</TransitionGroup>
 		</div>
