@@ -125,21 +125,19 @@ function handleSubmit() {
 			label="Due date"
 		/>
 
-		<slot name="footer">
-			<div class="flex gap-3 justify-end">
-				<UButton
-					type="button"
-					color="neutral"
-					variant="ghost"
-					:disabled="loading"
-					@click="emit('cancel')"
-				>
-					Cancel
-				</UButton>
-				<UButton type="submit" :loading="loading">
-					{{ isEditing ? 'Save changes' : 'Create task' }}
-				</UButton>
-			</div>
-		</slot>
+		<div class="flex gap-3 justify-end">
+      <UButton
+        type="button"
+        color="neutral"
+        variant="ghost"
+        :disabled="loading"
+        @click="emit('cancel')"
+      >
+        Cancel
+      </UButton>
+      <UButton type="submit" :loading="loading">
+        {{ isEditing ? 'Save changes' : 'Create task' }}
+      </UButton>
+    </div>
 	</form>
 </template>

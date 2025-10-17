@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import { computed, ref } from 'vue'
 import { useToast } from '#imports'
 import { useTasksStore } from '../../store/tasks'
@@ -27,7 +28,9 @@ const selectedTask = computed<Task | null>(() => {
 })
 
 const mode = computed(() => (selectedTask.value ? 'edit' : 'create'))
+
 const headline = computed(() => (mode.value === 'edit' ? 'Edit task' : 'Create task'))
+console.log('headline.value',headline.value)
 
 function close() {
   emit('close')
@@ -35,7 +38,7 @@ function close() {
 
 async function handleSubmit(values: TaskFormValues) {
   isMutating.value = true
-  
+
   try {
     if (selectedTask.value) {
       // Update existing task
@@ -44,8 +47,9 @@ async function handleSubmit(values: TaskFormValues) {
         description: values.description,
         status: values.status,
         dueDate: values.dueDate ?? undefined
-      })
-      toast.add({ title: 'Task updated', color: 'success' })
+      });
+
+      toast.add({ title: 'Task updated', color: 'success' });
     } else {
       // Create new task
       await tasksStore.createTask({
@@ -53,10 +57,12 @@ async function handleSubmit(values: TaskFormValues) {
         description: values.description,
         status: values.status ?? 'pending',
         dueDate: values.dueDate ?? undefined
-      })
-      toast.add({ title: 'Task created', color: 'success' })
+      });
+
+      toast.add({ title: 'Task created', color: 'success' });
     }
-    close()
+
+    close();
   } catch (err) {
     const message = err instanceof Error ? err.message : `Failed to ${mode.value} task`
     toast.add({ title: 'Error', description: message, color: 'error' })
@@ -66,32 +72,15 @@ async function handleSubmit(values: TaskFormValues) {
 }
 </script>
 
+
 <template>
   <UModal
     :open="open"
-    :close="false"
-    class="max-w-lg"
-    @update:open="(value: boolean) => { if (!value) close() }"
+    @update:open="(val: boolean) => { if (!val) close() }"
+    :title="headline"
+    :ui="{ footer: 'justify-end' }"
   >
-    <template #header>
-      <div class="flex items-start justify-between">
-        <div>
-          <h2 class="text-xl font-semibold">{{ headline }}</h2>
-          <p class="text-sm text-gray-500 mt-1">
-            {{ mode === 'edit' ? 'Update the selected task.' : 'Provide details for the new task.' }}
-          </p>
-        </div>
-        <UButton
-          icon="i-heroicons-x-mark"
-          color="neutral"
-          variant="ghost"
-          :disabled="isMutating"
-          @click="close"
-        />
-      </div>
-    </template>
-
-    <template #content>
+    <template #body>
       <TaskForm
         :task="selectedTask"
         :mode="mode"

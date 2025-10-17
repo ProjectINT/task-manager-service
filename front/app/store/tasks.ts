@@ -6,6 +6,9 @@ interface TasksState {
   filter: TaskFilter
   loading: boolean
   error: string | null
+  // UI state: task form modal
+  isTaskFormOpen: boolean
+  editingTaskId: Task['id'] | null
 }
 
 export const useTasksStore = defineStore('tasks', {
@@ -16,7 +19,9 @@ export const useTasksStore = defineStore('tasks', {
       dueDate: null
     },
     loading: false,
-    error: null
+    error: null,
+    isTaskFormOpen: false,
+    editingTaskId: null
   }),
 
   getters: {
@@ -38,10 +43,10 @@ export const useTasksStore = defineStore('tasks', {
 
         filtered = filtered.filter((task: Task) => {
           if (!task.dueDate) return false
-          
+
           const taskDueDate = new Date(task.dueDate)
           const taskDueDateOnly = new Date(taskDueDate.getFullYear(), taskDueDate.getMonth(), taskDueDate.getDate())
-          
+
           return taskDueDateOnly.getTime() === filterDateOnly.getTime()
         })
       }
@@ -82,6 +87,30 @@ export const useTasksStore = defineStore('tasks', {
   },
 
   actions: {
+    /**
+     * Open task form in create mode
+     */
+    openTaskCreateForm() {
+      this.isTaskFormOpen = true
+      this.editingTaskId = null
+    },
+
+    /**
+     * Open task form in edit mode for a given task id
+     */
+    openTaskEditForm(id: string | number) {
+      this.isTaskFormOpen = true
+      this.editingTaskId = id
+    },
+
+    /**
+     * Close task form modal and clear editing id
+     */
+    closeTaskForm() {
+      this.isTaskFormOpen = false
+      this.editingTaskId = null
+    },
+
     /**
      * Set filter (can update type, dueDate, or both)
      */
@@ -154,7 +183,7 @@ export const useTasksStore = defineStore('tasks', {
         // TODO: Replace with actual API call
         // const response = await $fetch('/api/tasks')
         // this.tasks = response
-        
+
         // Mock data for now
         await new Promise(resolve => setTimeout(resolve, 500))
         console.log('Tasks fetched')
@@ -179,7 +208,7 @@ export const useTasksStore = defineStore('tasks', {
         //   body: task
         // })
         // this.addTask(newTask)
-        
+
         // Mock for now
         const newTask: Task = {
           ...task,

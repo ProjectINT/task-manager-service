@@ -1,6 +1,5 @@
 <script setup lang="ts">
-
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 
 import { useTasksStore } from './store/tasks'
 
@@ -8,25 +7,18 @@ import type { Task } from '../types'
 
 const tasksStore = useTasksStore()
 
-const isFormOpen = ref(false)
-
-const editingTaskId = ref<Task['id'] | null>(null)
-
 const loading = computed(() => tasksStore.loading)
 
 function openCreateForm() {
-  editingTaskId.value = null
-  isFormOpen.value = true
+  tasksStore.openTaskCreateForm()
 }
 
 function openEditForm(taskId: Task['id']) {
-  editingTaskId.value = taskId
-  isFormOpen.value = true
+  tasksStore.openTaskEditForm(taskId)
 }
 
 function closeForm() {
-  isFormOpen.value = false
-  editingTaskId.value = null
+  tasksStore.closeTaskForm()
 }
 
 onMounted(() => {
@@ -65,8 +57,8 @@ useHead({
 
       <ClientOnly>
         <TaskFormWrapper
-          :open="isFormOpen"
-          :task-id="editingTaskId"
+          :open="tasksStore.isTaskFormOpen"
+          :task-id="tasksStore.editingTaskId"
           @close="closeForm"
         />
       </ClientOnly>
