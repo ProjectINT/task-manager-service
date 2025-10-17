@@ -11,7 +11,6 @@ const emit = defineEmits<{
 
 const tasksStore = useTasksStore()
 const { counters } = storeToRefs(tasksStore)
-console.log('counters', counters)
 
 /**
  * Handle create task button click
