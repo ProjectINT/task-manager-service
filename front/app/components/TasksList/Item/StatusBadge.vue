@@ -22,7 +22,7 @@ const statusMeta = computed(() => {
 		case 'in-progress':
 			return {
 				label: 'In Progress',
-				color: 'primary' as const
+				color: 'secondary' as const
 			}
 		case 'pending':
 			return {

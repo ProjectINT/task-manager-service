@@ -1,24 +1,18 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useTasksStore } from '../../../store/tasks'
 import type { TaskStatus } from '../../../../types'
 
-type FilterCounts = {
-  all: number
-  pending: number
-  'in-progress': number
-  completed: number
+const tasksStore = useTasksStore()
+const { tasksCountByStatus, loading } = storeToRefs(tasksStore)
+
+function handleStatusChange(value: TaskStatus | null) {
+  tasksStore.setFilter({ type: value })
 }
 
-const props = defineProps<{
-  modelValue: TaskStatus | null
-  counts: FilterCounts
-  loading?: boolean
-  dueDate?: Date | null
-}>()
-
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: TaskStatus | null): void
-  (e: 'update:dueDate', value: Date | null): void
-}>()
+function handleDueDateChange(value: Date | null) {
+  tasksStore.setFilter({ dueDate: value })
+}
 </script>
 
 <template>
@@ -27,15 +21,15 @@ const emit = defineEmits<{
       <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Filter by Status:</span>
       <div class="flex flex-wrap gap-2 items-center">
         <TasksListFilterStatusFilterButtons
-          :model-value="modelValue"
+          :model-value="tasksStore.filter.type"
           :disabled="loading"
-          :counts="{ all: counts?.all, pending: counts?.pending, 'in-progress': counts?.['in-progress'], completed: counts?.completed }"
+          :counts="{ all: tasksCountByStatus?.all, pending: tasksCountByStatus?.pending, 'in-progress': tasksCountByStatus?.['in-progress'], completed: tasksCountByStatus?.completed }"
           :include-all="true"
-          @update:model-value="emit('update:modelValue', $event)"
+          @update:model-value="handleStatusChange"
         />
         <DateSelect
-          :model-value="dueDate"
-          @update:model-value="emit('update:dueDate', $event)"
+          :model-value="tasksStore.filter.dueDate"
+          @update:model-value="handleDueDateChange"
         />
       </div>
     </div>

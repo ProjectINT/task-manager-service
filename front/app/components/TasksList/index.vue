@@ -2,39 +2,17 @@
 import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTasksStore } from '../../store/tasks'
-import type { TaskStatus } from '../../../types'
-
-interface Props {
-	loading?: boolean
-}
-
-defineProps<Props>()
 
 const tasksStore = useTasksStore()
-const { filteredTasks, tasksCountByStatus } = storeToRefs(tasksStore)
+const { filteredTasks, loading } = storeToRefs(tasksStore)
 
 const hasTasks = computed(() => filteredTasks.value.length > 0)
-
-function handleFilterChange(filterType: TaskStatus | null) {
-	tasksStore.setFilter({ type: filterType })
-}
-
-function handleDueDateChange(date: Date | null) {
-	tasksStore.setFilter({ dueDate: date })
-}
 </script>
 
 <template>
 	<section class="space-y-6">
 
-		<TasksListFilter
-			:model-value="tasksStore.filter.type"
-			:counts="tasksCountByStatus"
-			:loading="loading"
-			:due-date="tasksStore.filter.dueDate"
-			@update:model-value="handleFilterChange"
-			@update:due-date="handleDueDateChange"
-		/>
+		<TasksListFilter />
 
 		<div v-if="loading" class="space-y-2">
 				<USkeleton v-for="index in 3" :key="index" class="h-20" />
@@ -48,7 +26,6 @@ function handleDueDateChange(date: Date | null) {
 					v-for="task in filteredTasks"
 					:key="task.id"
 					:task-id="task.id"
-					:disabled="loading"
 				/>
 			</TransitionGroup>
 		</div>

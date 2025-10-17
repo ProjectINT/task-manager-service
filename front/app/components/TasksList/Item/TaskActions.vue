@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useToast } from '#imports'
+import { storeToRefs } from 'pinia'
 import { useTasksStore } from '../../../store/tasks'
 import type { Task, TaskStatus } from '../../../../types'
 
 interface Props {
 	taskId: Task['id']
-	disabled?: boolean
 }
 
 const props = defineProps<Props>()
 
 const tasksStore = useTasksStore()
+const { loading } = storeToRefs(tasksStore)
 const toast = useToast()
 
 const task = computed(() => tasksStore.getTaskById(props.taskId))
@@ -48,7 +49,7 @@ async function handleDelete() {
 			v-if="canStart"
 			color="primary"
 			size="sm"
-			:disabled="disabled"
+			:disabled="loading"
 			@click="handleStatusChange('in-progress')"
 		>
 			Start
@@ -58,7 +59,7 @@ async function handleDelete() {
 			v-if="canComplete"
 			color="success"
 			size="sm"
-			:disabled="disabled"
+			:disabled="loading"
 			@click="handleStatusChange('completed')"
 		>
 			Complete
@@ -69,7 +70,7 @@ async function handleDelete() {
 			color="neutral"
 			size="sm"
 			variant="ghost"
-			:disabled="disabled"
+			:disabled="loading"
 			@click="handleEdit"
 		/>
 
@@ -78,7 +79,7 @@ async function handleDelete() {
 			color="error"
 			size="sm"
 			variant="ghost"
-			:disabled="disabled"
+			:disabled="loading"
 			@click="handleDelete"
 		/>
 	</div>

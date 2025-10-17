@@ -7,7 +7,6 @@ import TaskActions from './TaskActions.vue'
 
 interface Props {
 	taskId: Task['id']
-	disabled?: boolean
 }
 
 const props = defineProps<Props>()
@@ -51,10 +50,7 @@ const dueDateLabel = computed(() => {
 		</div>
 
     <template #footer>
-      <TaskActions
-        :task-id="taskId"
-        :disabled="disabled"
-      />
+      <TaskActions :task-id="taskId" />
     </template>
 	</UCard>
 </template>

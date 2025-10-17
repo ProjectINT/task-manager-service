@@ -26,7 +26,7 @@ function handleCreateTask() {
       <div>
         <h1>Task Manager</h1>
         <p>
-          Keep track of ongoing work, prioritise what matters, and stay on top of deadlines.
+          Keep track of ongoing work.
         </p>
       </div>
       <UButton

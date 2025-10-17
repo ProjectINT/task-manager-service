@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 import { useTasksStore } from './store/tasks'
 
 const tasksStore = useTasksStore()
-
-const loading = computed(() => tasksStore.loading)
 
 function openCreateForm() {
   tasksStore.openTaskCreateForm()
@@ -32,7 +30,7 @@ useHead({
       <TasksHeader @create-task="openCreateForm" />
       <ErrorAlert />
 
-      <TasksList :loading="loading" />
+      <TasksList />
 
       <ClientOnly>
         <TaskFormWrapper
