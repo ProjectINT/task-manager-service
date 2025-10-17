@@ -134,8 +134,6 @@ src/
 - **Cache-Aside**: Redis caching with TTL
 - **Database Triggers**: Maintain task counters in real-time
 
-## TODO & Future Improvements
-
 ### 🔐 Authentication & Authorization
 - [ ] Implement JWT-based authentication
 - [ ] Add user registration and login endpoints

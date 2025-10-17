@@ -14,6 +14,8 @@ const hasTasks = computed(() => filteredTasks.value.length > 0)
 
 		<TasksListFilter />
 
+		<TasksListTasksCount />
+
 		<div v-if="loading" class="space-y-2">
 				<USkeleton v-for="index in 3" :key="index" class="h-20" />
 		</div>
