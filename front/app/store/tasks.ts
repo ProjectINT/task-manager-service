@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import type {
   Task,
   TaskFilter,
-  TaskStatus,
   UpdateTaskInput,
   CreateTaskInput,
   TaskCounters,
@@ -66,13 +65,27 @@ export const useTasksStore = defineStore('tasks', {
       // Filter by due date (tasks due on or before the selected date)
       if (state.filter.dueDate) {
         const filterDate = new Date(state.filter.dueDate)
-        const filterDateOnly = new Date(filterDate.getFullYear(), filterDate.getMonth(), filterDate.getDate())
+        // Use UTC methods to avoid timezone issues
+        const filterDateOnly = new Date(
+          Date.UTC(
+            filterDate.getUTCFullYear(),
+            filterDate.getUTCMonth(),
+            filterDate.getUTCDate()
+          )
+        )
 
         filtered = filtered.filter((task: Task) => {
           if (!task.dueDate) return false
 
           const taskDueDate = new Date(task.dueDate)
-          const taskDueDateOnly = new Date(taskDueDate.getFullYear(), taskDueDate.getMonth(), taskDueDate.getDate())
+          // Use UTC methods to avoid timezone issues
+          const taskDueDateOnly = new Date(
+            Date.UTC(
+              taskDueDate.getUTCFullYear(),
+              taskDueDate.getUTCMonth(),
+              taskDueDate.getUTCDate()
+            )
+          )
 
           return taskDueDateOnly.getTime() <= filterDateOnly.getTime()
         })
