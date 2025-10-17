@@ -10,7 +10,8 @@ const emit = defineEmits<{
 }>()
 
 const tasksStore = useTasksStore()
-const { tasksCountByStatus } = storeToRefs(tasksStore)
+const { counters } = storeToRefs(tasksStore)
+console.log('counters', counters)
 
 /**
  * Handle create task button click
@@ -41,14 +42,14 @@ function handleCreateTask() {
       <UCard>
         <div>
           <p>Total tasks</p>
-          <p>{{ tasksStore.totalTasks }}</p>
+          <p>{{ counters?.total ?? 0 }}</p>
         </div>
       </UCard>
       <UCard>
         <div>
           <p>In progress</p>
           <p>
-            {{ tasksCountByStatus.in_progress ?? 0 }}
+            {{ counters?.inProgress ?? 0 }}
           </p>
         </div>
       </UCard>
@@ -56,7 +57,7 @@ function handleCreateTask() {
         <div>
           <p>Completed</p>
           <p>
-            {{ tasksCountByStatus.completed ?? 0 }}
+            {{ counters?.completed ?? 0 }}
           </p>
         </div>
       </UCard>

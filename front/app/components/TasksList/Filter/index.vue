@@ -4,7 +4,7 @@ import { useTasksStore } from '../../../store/tasks'
 import type { TaskStatus } from '../../../../types'
 
 const tasksStore = useTasksStore()
-const { tasksCountByStatus, loading } = storeToRefs(tasksStore)
+const { counters, loading } = storeToRefs(tasksStore)
 
 function handleStatusChange(value: TaskStatus | null) {
   tasksStore.setFilter({ type: value })
@@ -23,7 +23,7 @@ function handleDueDateChange(value: Date | null) {
         <TasksListFilterStatusFilterButtons
           :model-value="tasksStore.filter.type"
           :disabled="loading"
-          :counts="{ all: tasksCountByStatus?.all, pending: tasksCountByStatus?.pending, in_progress: tasksCountByStatus?.in_progress, completed: tasksCountByStatus?.completed, cancelled: tasksCountByStatus?.cancelled }"
+          :counts="counters ? { all: counters.total, pending: counters.pending, in_progress: counters.inProgress, completed: counters.completed, cancelled: counters.cancelled } : undefined"
           :include-all="true"
           @update:model-value="handleStatusChange"
         />

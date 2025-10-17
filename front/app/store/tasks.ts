@@ -91,30 +91,6 @@ export const useTasksStore = defineStore('tasks', {
     },
 
     /**
-     * Get tasks count by status from counters or local calculation
-     */
-    tasksCountByStatus: (state: TasksState) => {
-      if (state.counters) {
-        return {
-          all: state.counters.total,
-          pending: state.counters.pending,
-          in_progress: state.counters.in_progress,
-          completed: state.counters.completed,
-          cancelled: state.counters.cancelled
-        }
-      }
-
-      // Fallback to local calculation
-      return {
-        all: state.tasks.length,
-        pending: state.tasks.filter((t: Task) => t.status === 'pending').length,
-        in_progress: state.tasks.filter((t: Task) => t.status === 'in_progress').length,
-        completed: state.tasks.filter((t: Task) => t.status === 'completed').length,
-        cancelled: state.tasks.filter((t: Task) => t.status === 'cancelled').length
-      }
-    },
-
-    /**
      * Check if there are any tasks
      */
     hasTasks: (state: TasksState): boolean => state.totalTasks > 0,

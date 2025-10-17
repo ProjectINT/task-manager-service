@@ -119,6 +119,7 @@ export class TasksService {
 
   private async invalidateListCache() {
     await this.redisService.delPattern(`${LIST_CACHE_PREFIX}:*`);
+    await this.redisService.del('tasks:counters');
   }
 
   private buildCacheKey(params: {

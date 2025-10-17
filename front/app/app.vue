@@ -14,9 +14,7 @@ function closeForm() {
 }
 
 onMounted(() => {
-  if (!tasksStore.tasks.length) {
-    tasksStore.fetchTasks()
-  }
+  tasksStore.initialize()
 })
 
 useHead({
