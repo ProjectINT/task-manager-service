@@ -32,11 +32,11 @@ model Task {
 }
 
 model TaskCounter {
-  id         Int      @id @default(0)
-  total      Int      @default(0)
-  pending    Int      @default(0)
-  inProgress Int      @default(0) @map("in_progress")
-  completed  Int      @default(0)
-  cancelled  Int      @default(0)
-  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+  id          Int      @id @default(0)
+  total       Int      @default(0)
+  pending     Int      @default(0)
+  in_progress Int      @default(0)
+  completed   Int      @default(0)
+  cancelled   Int      @default(0)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
 }

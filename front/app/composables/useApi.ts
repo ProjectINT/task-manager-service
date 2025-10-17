@@ -17,7 +17,7 @@ interface PaginatedResponse<T> {
 
 interface TaskCounters {
   pending: number
-  inProgress: number
+  in_progress: number
   completed: number
   cancelled: number
   total: number

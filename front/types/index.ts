@@ -69,7 +69,7 @@ export interface PaginatedResponse<T> {
  */
 export interface TaskCounters {
   pending: number
-  inProgress: number
+  in_progress: number
   completed: number
   cancelled: number
   total: number
