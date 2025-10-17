@@ -1,14 +1,8 @@
-import { TaskStatus } from '@prisma/client';
+import { Task } from '@prisma/client';
 
-export interface TaskDto {
-  id: string;
-  title: string;
-  description: string | null;
-  status: TaskStatus;
-  dueDate: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
+// Используем тип Task напрямую из Prisma
+// NestJS автоматически сериализует Date в string при возврате JSON
+export type TaskDto = Task;
 
 export interface TaskCountersDto {
   total: number;
@@ -27,5 +21,4 @@ export interface TaskListMeta {
 export interface TaskListResponseDto {
   data: TaskDto[];
   meta: TaskListMeta;
-  counters: TaskCountersDto;
 }

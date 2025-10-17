@@ -71,6 +71,8 @@ task-manager-service/
 ├── package.json            # Root package.json with workspaces
 ├── setup.sh                # Quick install script
 ├── README.md               # Documentation
+├── validation/             # Shared validation constants (used by backend & front)
+│   └── constants.ts
 ├── backend/                # NestJS API
 │   ├── src/
 │   ├── test/
@@ -83,6 +85,23 @@ task-manager-service/
     ├── package.json
     └── ...
 ```
+
+## 🔄 Shared Code
+
+### Validation Constants
+Validation constants are stored at the root level in `/validation` folder and can be imported by both backend and front:
+
+**Backend example:**
+```typescript
+import { TASK_VALIDATION } from '../../../../../validation/constants';
+```
+
+**Front example:**
+```typescript
+import { TASK_VALIDATION } from '../../validation/constants';
+```
+
+This ensures consistency across the entire application.
 
 ## 📝 Git Workflow
 

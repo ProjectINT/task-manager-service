@@ -7,8 +7,7 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 
 export interface FindTasksParams {
   status?: TaskStatus;
-  dateFrom?: Date;
-  dateTo?: Date;
+  dueDate?: Date;
   skip: number;
   take: number;
 }
@@ -17,31 +16,41 @@ export interface FindTasksParams {
 export class TasksRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findMany({ status, dateFrom, dateTo, skip, take }: FindTasksParams) {
+  async findMany({ status, dueDate, skip, take }: FindTasksParams): Promise<Task[]> {
     const where: Prisma.TaskWhereInput = {};
 
     if (status) {
       where.status = status;
     }
 
-    if (dateFrom || dateTo) {
+    if (dueDate) {
       where.dueDate = {
-        ...(dateFrom ? { gte: dateFrom } : {}),
-        ...(dateTo ? { lte: dateTo } : {}),
+        lte: dueDate,
       };
     }
 
-    const [items, total] = await this.prisma.$transaction([
-      this.prisma.task.findMany({
-        where,
-        skip,
-        take,
-        orderBy: { createdAt: 'desc' },
-      }),
-      this.prisma.task.count({ where }),
-    ]);
+    return this.prisma.task.findMany({
+      where,
+      skip,
+      take,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 
-    return { items, total };
+  async count({ status, dueDate }: Omit<FindTasksParams, 'skip' | 'take'>): Promise<number> {
+    const where: Prisma.TaskWhereInput = {};
+
+    if (status) {
+      where.status = status;
+    }
+
+    if (dueDate) {
+      where.dueDate = {
+        lte: dueDate,
+      };
+    }
+
+    return this.prisma.task.count({ where });
   }
 
   findById(id: string): Promise<Task | null> {
@@ -90,7 +99,13 @@ export class TasksRepository {
     return this.prisma.task.delete({ where: { id } });
   }
 
-  getCounters(): Promise<TaskCounter | null> {
-    return this.prisma.taskCounter.findUnique({ where: { id: 0 } });
+  async getCounters(): Promise<TaskCounter> {
+    const counters = await this.prisma.taskCounter.findUnique({ where: { id: 0 } });
+
+    if (!counters) {
+      throw new Error('Task counters not found');
+    }
+
+    return counters;
   }
 }

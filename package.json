@@ -15,14 +15,18 @@
     "lint:backend": "cd backend && npm run lint",
     "lint:front": "cd front && npm run lint",
     "test:backend": "cd backend && npm run test",
-    "test:e2e:backend": "cd backend && npm run test:e2e"
+    "test:e2e:backend": "cd backend && npm run test:e2e",
+    "generate:tasks": "ts-node scripts/generate-tasks.ts"
   },
   "workspaces": [
     "backend",
     "front"
   ],
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "@types/node": "^22.10.7",
+    "concurrently": "^8.2.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   },
   "engines": {
     "node": ">=18.0.0",

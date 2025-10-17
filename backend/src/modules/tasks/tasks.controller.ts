@@ -26,6 +26,11 @@ export class TasksController {
     return this.tasksService.getTasks(query);
   }
 
+  @Get('counters')
+  getCounters() {
+    return this.tasksService.getCounters();
+  }
+
   @Get(':id')
   getTask(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.tasksService.getTaskById(id);

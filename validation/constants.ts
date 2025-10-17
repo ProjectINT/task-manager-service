@@ -1,0 +1,4 @@
+export const TASK_VALIDATION = {
+  TITLE_MAX_LENGTH: 255,
+  DESCRIPTION_MAX_LENGTH: 4000,
+} as const;

@@ -9,30 +9,22 @@ import {
   MaxLength,
 } from 'class-validator';
 
-const normalizeStatus = (value: unknown): TaskStatus | unknown => {
-  if (typeof value !== 'string') {
-    return value;
-  }
-
-  const normalized = value.trim().toUpperCase().replace(/-/g, '_');
-  return TaskStatus[normalized as keyof typeof TaskStatus] ?? value;
-};
+import { TASK_VALIDATION } from '../../../../../validation/constants';
 
 export class CreateTaskDto {
   @IsString()
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsNotEmpty()
-  @MaxLength(255)
+  @MaxLength(TASK_VALIDATION.TITLE_MAX_LENGTH)
   title!: string;
 
   @IsOptional()
   @IsString()
   @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
-  @MaxLength(4000)
+  @MaxLength(TASK_VALIDATION.DESCRIPTION_MAX_LENGTH)
   description?: string;
 
   @IsOptional()
-  @Transform(({ value }) => normalizeStatus(value))
   @IsEnum(TaskStatus)
   status?: TaskStatus;
 

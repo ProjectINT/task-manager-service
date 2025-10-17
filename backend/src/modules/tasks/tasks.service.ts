@@ -7,7 +7,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { QueryTasksDto } from './dto/query-tasks.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TasksRepository } from './tasks.repository';
-import { TaskCountersDto, TaskDto, TaskListResponseDto } from './tasks.types';
+import { TaskDto, TaskListResponseDto } from './tasks.types';
 
 const LIST_CACHE_PREFIX = 'tasks:list';
 const LIST_CACHE_TTL_SECONDS = 60;
@@ -23,15 +23,13 @@ export class TasksService {
     const page = query.page ?? 1;
     const limit = query.limit ?? 10;
     const skip = (page - 1) * limit;
-    const dateFrom = query.dateFrom ? new Date(query.dateFrom) : undefined;
-    const dateTo = query.dateTo ? new Date(query.dateTo) : undefined;
+    const dueDate = query.dueDate ? new Date(query.dueDate) : undefined;
 
     const cacheKey = this.buildCacheKey({
       page,
       limit,
       status: query.status,
-      dateFrom: query.dateFrom,
-      dateTo: query.dateTo,
+      dueDate: query.dueDate,
     });
 
     const cached = await this.redisService.get<TaskListResponseDto>(cacheKey);
@@ -39,31 +37,47 @@ export class TasksService {
       return cached;
     }
 
-    const [{ items, total }, counters] = await Promise.all([
+    const [items, total] = await Promise.all([
       this.tasksRepository.findMany({
         status: query.status,
-        dateFrom,
-        dateTo,
+        dueDate,
         skip,
         take: limit,
       }),
-      this.tasksRepository.getCounters(),
+      this.tasksRepository.count({
+        status: query.status,
+        dueDate,
+      }),
     ]);
 
     const response: TaskListResponseDto = {
-      data: items.map(mapTask),
+      data: items,
       meta: {
         page,
         limit,
         total,
         totalPages: total ? Math.ceil(total / limit) : 0,
       },
-      counters: mapCounters(counters),
     };
 
     await this.redisService.set(cacheKey, response, LIST_CACHE_TTL_SECONDS);
 
     return response;
+  }
+
+  async getCounters(): Promise<TaskCounter> {
+    const cacheKey = 'tasks:counters';
+
+    const cached = await this.redisService.get<TaskCounter>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    const counters = await this.tasksRepository.getCounters();
+
+    await this.redisService.set(cacheKey, counters, LIST_CACHE_TTL_SECONDS);
+
+    return counters;
   }
 
   async getTaskById(id: string): Promise<TaskDto> {
@@ -73,20 +87,20 @@ export class TasksService {
       throw new NotFoundException(`Task with id ${id} not found`);
     }
 
-    return mapTask(task);
+    return task;
   }
 
   async createTask(dto: CreateTaskDto): Promise<TaskDto> {
     const task = await this.tasksRepository.create(dto);
     await this.invalidateListCache();
-    return mapTask(task);
+    return task;
   }
 
   async updateTask(id: string, dto: UpdateTaskDto): Promise<TaskDto> {
     try {
       const task = await this.tasksRepository.update(id, dto);
       await this.invalidateListCache();
-      return mapTask(task);
+      return task;
     } catch (error) {
       this.handlePrismaNotFound(error, id);
       throw error;
@@ -111,8 +125,7 @@ export class TasksService {
     page: number;
     limit: number;
     status?: TaskStatus;
-    dateFrom?: string;
-    dateTo?: string;
+    dueDate?: string;
   }) {
     const parts = [LIST_CACHE_PREFIX, `page=${params.page}`, `limit=${params.limit}`];
 
@@ -120,12 +133,8 @@ export class TasksService {
       parts.push(`status=${params.status}`);
     }
 
-    if (params.dateFrom) {
-      parts.push(`dateFrom=${params.dateFrom}`);
-    }
-
-    if (params.dateTo) {
-      parts.push(`dateTo=${params.dateTo}`);
+    if (params.dueDate) {
+      parts.push(`dueDate=${params.dueDate}`);
     }
 
     return parts.join(':');
@@ -137,20 +146,3 @@ export class TasksService {
     }
   }
 }
-
-const mapTask = (task: Task): TaskDto => ({
-  id: task.id,
-  title: task.title,
-  description: task.description ?? null,
-  status: task.status,
-  dueDate: task.dueDate ? task.dueDate.toISOString() : null,
-  createdAt: task.createdAt.toISOString(),
-  updatedAt: task.updatedAt.toISOString(),
-});
-
-const mapCounters = (counters: TaskCounter | null): TaskCountersDto => ({
-  total: counters?.total ?? 0,
-  pending: counters?.pending ?? 0,
-  inProgress: counters?.inProgress ?? 0,
-  completed: counters?.completed ?? 0,
-});

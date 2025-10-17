@@ -70,20 +70,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   private createClient(): RedisClientType {
-    const url = process.env.REDIS_URL;
-
-    // Если указан полный URL, используем его напрямую
-    if (url) {
-      this.logger.log(`Connecting to Redis with URL`);
-      return createClient({ url });
-    }
-
-    // Иначе собираем конфигурацию из отдельных параметров
     const username = process.env.REDIS_USERNAME || 'default';
     const password = process.env.REDIS_PASSWORD;
-    const hostEnv = process.env.REDIS_HOST || 'localhost';
-    const [host, portStr] = hostEnv.includes(':') ? hostEnv.split(':') : [hostEnv, '6379'];
-    const port = Number(portStr || process.env.REDIS_PORT) || 6379;
+    const host = process.env.REDIS_HOST || 'localhost';
+    const port = Number(process.env.REDIS_PORT) || 6379;
 
     this.logger.log(`Connecting to Redis at ${host}:${port} (user: ${username})`);
 
