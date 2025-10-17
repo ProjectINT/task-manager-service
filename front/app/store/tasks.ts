@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Task, TaskFilter, TaskStatus, UpdateTaskInput } from '../../types'
+import { mockTasks } from './mock-tasks'
 
 interface TasksState {
   tasks: Task[]
@@ -13,7 +14,7 @@ interface TasksState {
 
 export const useTasksStore = defineStore('tasks', {
   state: (): TasksState => ({
-    tasks: [],
+    tasks: [...mockTasks],
     filter: {
       type: null,
       dueDate: null
