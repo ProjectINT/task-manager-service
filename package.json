@@ -17,7 +17,8 @@
     "test:backend": "cd backend && npm run test",
     "test:e2e:backend": "cd backend && npm run test:e2e",
     "generate:tasks": "ts-node scripts/generate-tasks.ts",
-    "update:db": "ts-node scripts/update-db.ts"
+    "update:db": "ts-node scripts/update-db.ts",
+    "test:api": "ts-node scripts/test-on-data.ts"
   },
   "workspaces": [
     "backend",
