@@ -1,98 +1,191 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend - Task Manager API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS REST API with PostgreSQL and Redis caching.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tech Stack
 
-## Description
+- **NestJS** - Application framework
+- **Prisma** - ORM for PostgreSQL
+- **PostgreSQL** - Primary database
+- **Redis** - Caching layer
+- **TypeScript** - Language
+- **Jest** - Testing framework
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Prerequisites
 
-## Project setup
+- Node.js >= 18.0.0
+- PostgreSQL database
+- Redis server
+
+## Installation
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+## Environment Variables
+
+Create `.env` file:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/taskmanager"
+DIRECT_URL="postgresql://user:password@localhost:5432/taskmanager"
+REDIS_HOST="localhost"
+REDIS_PORT="6379"
+REDIS_USERNAME="default"
+REDIS_PASSWORD=""
+PORT="3001"
+```
+
+For Docker Compose setup, see `.env.docker`.
+
+## Database Setup
 
 ```bash
-# development
-$ npm run start
+# Run migrations
+npx prisma migrate dev
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Generate Prisma client
+npx prisma generate
 ```
 
-## Run tests
+## Development
 
 ```bash
-# unit tests
-$ npm run test
+# Watch mode
+npm run start:dev
 
-# e2e tests
-$ npm run test:e2e
+# Standard mode
+npm run start
 
-# test coverage
-$ npm run test:cov
+# Production mode
+npm run start:prod
 ```
 
-## Deployment
+API will be available at `http://localhost:3001/api`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## Testing
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Test Data Scripts
 
-## Resources
+Located in `../scripts/`:
 
-Check out a few resources that may come in handy when working with NestJS:
+### Generate and Load Test Data
+```bash
+# Generate 100 tasks and save to generated-tasks.json
+npm run generate-tasks
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# Load tasks from generated-tasks.json to database
+npm run update-db
+```
 
-## Support
+### Run API Tests
+```bash
+# Run comprehensive API test suite
+npm run test-api
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Tests all endpoints: GET, POST, PATCH, DELETE, counters, pagination, filtering.
 
-## Stay in touch
+## API Endpoints
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Tasks
+- `GET /api/tasks` - List tasks (pagination + filters)
+- `GET /api/tasks/:id` - Get task by ID
+- `POST /api/tasks` - Create task
+- `PATCH /api/tasks/:id` - Update task
+- `DELETE /api/tasks/:id` - Delete task
 
-## License
+### Counters
+- `GET /api/tasks/counters` - Get task counters by status
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+## Project Structure
+
+```
+src/
+├── modules/
+│   └── tasks/           # Tasks feature module
+│       ├── tasks.controller.ts
+│       ├── tasks.service.ts
+│       ├── tasks.repository.ts
+│       └── dto/
+├── infra/
+│   ├── prisma/          # Database module
+│   └── cache/           # Redis module
+└── common/              # Shared utilities
+```
+
+## Architecture
+
+- **Layered Architecture**: Controller → Service → Repository → Database
+- **Repository Pattern**: Data access abstraction
+- **DTO Pattern**: Type-safe input/output validation
+- **Cache-Aside**: Redis caching with TTL
+- **Database Triggers**: Maintain task counters in real-time
+
+## TODO & Future Improvements
+
+### 🔐 Authentication & Authorization
+- [ ] Implement JWT-based authentication
+- [ ] Add user registration and login endpoints
+
+### 🛡️ Error Handling & Validation
+- [ ] Create global exception filter for consistent error responses
+- [ ] Add custom exceptions (TaskNotFoundException, etc.)
+
+### 🧪 Testing
+- [ ] Write unit tests for services (target: 80%+ coverage)
+- [ ] Write unit tests for repositories
+- [ ] Expand E2E tests for all endpoints
+- [ ] Add integration tests for database operations
+- [ ] Add tests for Redis caching behavior
+- [ ] Test error scenarios and edge cases
+- [ ] Add load/performance tests
+- [ ] Implement CI/CD pipeline with automated tests
+
+### 📊 Monitoring & Observability
+- [ ] Add health check endpoint (`/health`)
+- [ ] Integrate logging library (Winston/Pino)
+
+### 🚀 Performance & Scalability
+- [ ] Implement query result pagination limits
+- [ ] Add database query performance logging
+- [ ] Implement rate limiting
+- [ ] Add request throttling
+
+### 📝 Documentation
+- [ ] Generate API documentation with Swagger/OpenAPI
+
+### 🔧 Code Quality & DevOps
+- [ ] Add pre-commit hooks (Husky)
+- [ ] Set up automated code formatting (Prettier)
+- [ ] Configure linting rules (ESLint)
+- [ ] Add commit message linting (commitlint)
+- [ ] Implement semantic versioning
+- [ ] Add changelog generation
+- [ ] Create Docker multi-stage builds optimization
+
+### 🔄 Data Management
+- [ ] Add soft delete for tasks
+- [ ] Implement data archiving strategy
+- [ ] Add database backup automation
+- [ ] Create data migration scripts
+- [ ] Implement data seeding for development
+- [ ] Add database transaction management
+
+### 🌐 API Improvements
+- [ ] Implement API versioning
+- [ ] Add GraphQL support (optional)
+- [ ] Create WebSocket support for real-time updates
+- [ ] Create webhooks for task events
