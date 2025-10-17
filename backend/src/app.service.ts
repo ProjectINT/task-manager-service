@@ -1,8 +1,24 @@
 import { Injectable } from '@nestjs/common';
 
+/*
+  Это новый проект, только инициализированный нужно спроектировать апи,
+  Должны быть эндпоинты:
+    1. Получение списка задач (с пагинацией, фильтрацией по статусу и дате)
+    2. Создание новой задачи
+    3. Обновление задачи по ID
+    4. Удаление задачи по ID
+  Функции базы данных и оптимизации:
+    - используем redis для кеширования запросов
+    - триггеры счетчика, при обновлении/создании задач, триггер обновляет таблицу counters
+*/
+
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Hello World!';
+  getHealth() {
+    return {
+      status: 'ok',
+      uptime: process.uptime(),
+      timestamp: new Date().toISOString(),
+    } as const;
   }
 }

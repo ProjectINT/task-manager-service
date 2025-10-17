@@ -1,0 +1,38 @@
+// Prisma schema for task manager service
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum TaskStatus {
+  pending
+  in_progress
+  completed
+  cancelled
+}
+
+model Task {
+  id          String     @id @default(uuid())
+  title       String
+  description String?
+  status      TaskStatus @default(pending)
+  dueDate     DateTime?  @map("due_date")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+}
+
+model TaskCounter {
+  id         Int      @id @default(0)
+  total      Int      @default(0)
+  pending    Int      @default(0)
+  inProgress Int      @default(0) @map("in_progress")
+  completed  Int      @default(0)
+  cancelled  Int      @default(0)
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at")
+}
