@@ -72,30 +72,29 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Navigate to project directory
             cd /var/www/task-manager-service
-
-            # Pull latest docker-compose.prod.yml
-            curl -o docker-compose.prod.yml https://raw.githubusercontent.com/${{ github.repository }}/main/docker-compose.prod.yml
 
             # Pull latest image
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
-            # Stop and remove old containers
-            docker compose -f docker-compose.prod.yml down
-
-            # Start new containers
+            # Deploy with docker compose
             docker compose -f docker-compose.prod.yml up -d
 
-            # Wait for health check
-            echo "Waiting for backend to be healthy..."
-            timeout 60 sh -c 'until docker compose -f docker-compose.prod.yml ps | grep -q "healthy"; do sleep 2; done'
-
-            # Show status
-            docker compose -f docker-compose.prod.yml ps
-
-            # Clean up old images
-            docker image prune -af --filter "until=24h"
+            # Wait for backend to be ready (max 60 seconds)
+            echo "Waiting for backend to be ready..."
+            for i in $(seq 1 60); do
+              if curl -f http://localhost:3001/api/health > /dev/null 2>&1; then
+                echo "Backend is ready!"
+                break
+              fi
+              if [ $i -eq 60 ]; then
+                echo "Backend failed to start within 120 seconds"
+                docker compose -f docker-compose.prod.yml logs backend
+                exit 1
+              fi
+              echo "Attempt $i/60: Backend not ready yet, waiting..."
+              sleep 2
+            done
 
       - name: Verify deployment
         uses: appleboy/ssh-action@v1.0.3
@@ -104,6 +103,21 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Test health endpoint
-            curl -f http://localhost:3001/api/health || exit 1
-            echo "Deployment successful!"
+            # Test health endpoint and show status
+            if curl -f http://localhost:3001/api/health; then
+              echo "✅ Deployment successful!"
+              docker compose -f /var/www/task-manager-service/docker-compose.prod.yml ps
+            else
+              echo "❌ Health check failed"
+              exit 1
+            fi
+
+      - name: Clean up old images
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Remove unused images older than 24 hours
+            docker image prune -af --filter "until=24h"
