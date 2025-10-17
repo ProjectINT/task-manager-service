@@ -25,6 +25,10 @@ model Task {
   dueDate     DateTime?  @map("due_date")
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([dueDate])
+  @@index([status, dueDate])
 }
 
 model TaskCounter {
