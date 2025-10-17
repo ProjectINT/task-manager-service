@@ -41,19 +41,7 @@ useHead({
       <TasksList
         :loading="loading"
         @edit-task="openEditForm"
-      >
-        <template #actions>
-          <UButton icon="i-heroicons-plus" @click="openCreateForm">
-            Add task
-          </UButton>
-        </template>
-
-        <template #empty-action>
-          <UButton @click="openCreateForm">
-            Create first task
-          </UButton>
-        </template>
-      </TasksList>
+      />
 
       <ClientOnly>
         <TaskFormWrapper

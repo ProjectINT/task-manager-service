@@ -19,12 +19,6 @@ const { filteredTasks, tasksCountByStatus } = storeToRefs(tasksStore)
 
 const hasTasks = computed(() => filteredTasks.value.length > 0)
 
-const emptyStateMessage = computed(() =>
-	tasksStore.filter.type === null && !tasksStore.filter.dueDate
-		? 'Create your first task to get organized.'
-		: 'No tasks match these filters yet.'
-)
-
 function handleFilterChange(filterType: TaskStatus | null) {
 	tasksStore.setFilter({ type: filterType })
 }
@@ -39,7 +33,7 @@ function handleEdit(taskId: Task['id']) {
 </script>
 
 <template>
-	<section class="space-y-4">
+	<section class="space-y-6">
 
 		<TasksListFilter
 			:model-value="tasksStore.filter.type"
@@ -54,14 +48,7 @@ function handleEdit(taskId: Task['id']) {
 				<USkeleton v-for="index in 3" :key="index" class="h-20" />
 		</div>
 
-		<div v-else-if="!hasTasks" class="text-center py-8">
-			<UIcon name="i-heroicons-clipboard-document-check" class="text-4xl mb-2" />
-			<h3 class="text-lg font-semibold mb-2">No tasks yet</h3>
-			<p class="text-gray-500 dark:text-gray-400">
-				{{ emptyStateMessage }}
-			</p>
-			<slot name="empty-action" />
-		</div>
+		<TasksListEmptyState v-else-if="!hasTasks" />
 
 		<div v-else class="space-y-2">
 			<TransitionGroup name="list" tag="div" class="space-y-2">
