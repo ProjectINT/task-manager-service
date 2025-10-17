@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { TaskStatus } from '../../../types'
+import type { TaskStatus } from '../../../../types'
 
 type FilterCounts = {
   all: number
@@ -26,7 +26,7 @@ const emit = defineEmits<{
     <div class="flex flex-col gap-2">
       <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Filter by Status:</span>
       <div class="flex flex-wrap gap-2 items-center">
-        <StatusFilterButtons
+        <TasksListFilterStatusFilterButtons
           :model-value="modelValue"
           :disabled="loading"
           :counts="{ all: counts?.all, pending: counts?.pending, 'in-progress': counts?.['in-progress'], completed: counts?.completed }"
@@ -35,11 +35,10 @@ const emit = defineEmits<{
         />
         <DateSelect
           :model-value="dueDate"
-          label="Filter by Due Date"
           @update:model-value="emit('update:dueDate', $event)"
         />
       </div>
     </div>
 
   </div>
-</template>
+  </template>

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 /**
  * DateSelect - universal date picker component
- * 
+ *
  * Uses standard v-model pattern for two-way binding.
  * Can be used anywhere in the application:
- * 
+ *
  * 1. In filters (binding to store):
  *    <DateSelect v-model="tasksStore.dueDate" label="Filter by Due Date" />
- * 
+ *
  * 2. In forms (binding to local state):
  *    const dueDate = ref<Date | null>(null)
  *    <DateSelect v-model="dueDate" label="Due date" />
- * 
+ *
  * 3. With explicit binding (if more control is needed):
  *    <DateSelect
  *      :model-value="someDate"
@@ -41,8 +41,8 @@ const df = new DateFormatter('ru-RU', {
 })
 
 const displayDate = computed(() => {
-  if (!props.modelValue) return 'Select date'
-  
+  if (!props.modelValue) return 'Select due date'
+
   // Convert Date to CalendarDate in local timezone for display
   const localDate = props.modelValue.toLocaleDateString('en-CA') // YYYY-MM-DD format
   const calDate = parseDate(localDate)
@@ -51,11 +51,11 @@ const displayDate = computed(() => {
 
 const calendarValue = computed(() => {
   if (!props.modelValue) return null
-  
+
   // Convert Date (stored as ISO UTC) to CalendarDate in user's local timezone
   const date = new Date(props.modelValue)
   const localDateString = date.toLocaleDateString('en-CA') // YYYY-MM-DD format
-  
+
   return parseDate(localDateString)
 })
 
@@ -65,7 +65,7 @@ const handleDateSelect = (date: any) => {
     isOpen.value = false
     return
   }
-  
+
   // Handle CalendarDate type
   if (typeof date === 'object' && 'year' in date && 'month' in date && 'day' in date && !Array.isArray(date)) {
     // Convert CalendarDate to Date in UTC for storage
@@ -106,7 +106,7 @@ const clearDate = () => {
           />
         </template>
       </UPopover>
-      
+
       <UButton
         v-if="modelValue"
         icon="i-heroicons-x-mark-20-solid"

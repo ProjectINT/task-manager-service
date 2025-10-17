@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TaskStatus } from '../../types'
-import { getStatusOptions } from '../utils/taskStatus'
+import type { TaskStatus } from '../../../../types'
+import { getStatusOptions } from '../../../utils/taskStatus'
 
 type Counts = Partial<Record<TaskStatus | 'all', number>>
 
@@ -47,4 +47,4 @@ function update(value: TaskStatus | null) {
       </span>
     </UButton>
   </div>
-</template>
+  </template>
