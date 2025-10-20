@@ -6,7 +6,11 @@ import type {
   CreateTaskInput,
   TaskCounters,
   PaginatedResponse
-} from '../../types'
+} from '../../types';
+
+import { TASK_VALIDATION } from '../../../validation/constants'
+
+import { taskTitleValid, taskDescriptionValid } from '../../../validation/validators'
 
 interface TasksState {
   // Data
@@ -309,6 +313,19 @@ export const useTasksStore = defineStore('tasks', {
       this.clearError()
 
       try {
+        // Validate title (required for create)
+        if (!taskTitleValid(taskData.title)) {
+          if (!taskData.title || taskData.title.trim().length === 0) {
+            throw new Error('Title is required')
+          }
+          throw new Error(`Title must not exceed ${TASK_VALIDATION.TITLE_MAX_LENGTH} characters`)
+        }
+
+        // Validate description (optional)
+        if (!taskDescriptionValid(taskData.description)) {
+          throw new Error(`Description must not exceed ${TASK_VALIDATION.DESCRIPTION_MAX_LENGTH} characters`)
+        }
+
         const api = useApi()
         const newTask = await api.tasks.create(taskData)
 
@@ -339,6 +356,21 @@ export const useTasksStore = defineStore('tasks', {
       this.clearError()
 
       try {
+        // Validate title if provided
+        if ('title' in updates && updates.title !== undefined) {
+          if (!taskTitleValid(updates.title)) {
+            if (!updates.title || updates.title.trim().length === 0) {
+              throw new Error('Title is required')
+            }
+            throw new Error(`Title must not exceed ${TASK_VALIDATION.TITLE_MAX_LENGTH} characters`)
+          }
+        }
+
+        // Validate description if provided
+        if ('description' in updates && !taskDescriptionValid(updates.description)) {
+          throw new Error(`Description must not exceed ${TASK_VALIDATION.DESCRIPTION_MAX_LENGTH} characters`)
+        }
+
         const api = useApi()
         const updatedTask = await api.tasks.update(id, updates)
 
