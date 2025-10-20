@@ -3,7 +3,7 @@
  */
 
 import type { ComputedRef } from 'vue'
-import type { $Enums } from '@prisma/client'
+import type { $Enums, Prisma, Task as PrismaTask } from '@prisma/client'
 
 /**
  * Task status
@@ -19,37 +19,23 @@ export interface TaskFilter {
 }
 
 /**
- * Task interface (matches backend response)
+ * Task interface (matches backend response with dates as strings for JSON serialization)
  */
-export interface Task {
-  id: string
-  title: string
-  description: string | null
-  status: TaskStatus
+export type Task = Omit<PrismaTask, 'dueDate' | 'createdAt' | 'updatedAt'> & {
   dueDate: string | null
-  createdAt: string
-  updatedAt: string
 }
 
 /**
- * Create task input interface
+ * Create task input interface (based on Prisma TaskCreateInput with dates as strings)
  */
-export interface CreateTaskInput {
-  title: string
-  description?: string
-  status?: TaskStatus
+export type CreateTaskInput = Omit<Prisma.TaskCreateInput, 'id' | 'dueDate' | 'createdAt' | 'updatedAt'> & {
   dueDate?: string
 }
 
 /**
- * Update task input interface
+ * Update task input interface (partial CreateTaskInput)
  */
-export interface UpdateTaskInput {
-  title?: string
-  description?: string
-  status?: TaskStatus
-  dueDate?: string
-}
+export type UpdateTaskInput = Partial<CreateTaskInput>
 
 /**
  * Paginated response interface
